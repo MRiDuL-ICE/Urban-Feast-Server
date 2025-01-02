@@ -27,6 +27,7 @@ async function run() {
 
     const menuCollection = client.db("UrbanFeastDB").collection("menu");
     const reviewsCollection = client.db("UrbanFeastDB").collection("reviews");
+    const cartCollection = client.db("UrbanFeastDB").collection("carts");
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
 
@@ -37,6 +38,13 @@ async function run() {
 
     app.get("/reviews", async (req, res) => {
       const result = await reviewsCollection.find().toArray();
+      res.send(result);
+    });
+
+    // cart collections
+    app.post("/carts", async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollection.insertOne(cartItem);
       res.send(result);
     });
 
