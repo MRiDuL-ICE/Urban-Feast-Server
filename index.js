@@ -29,11 +29,19 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const userCollection = client.db("UrbanFeastDB").collection("users");
     const menuCollection = client.db("UrbanFeastDB").collection("menu");
     const reviewsCollection = client.db("UrbanFeastDB").collection("reviews");
     const cartCollection = client.db("UrbanFeastDB").collection("carts");
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
+
+    // users related api
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
 
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
