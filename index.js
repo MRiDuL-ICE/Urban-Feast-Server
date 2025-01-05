@@ -67,7 +67,7 @@ async function run() {
       const token = req.headers.authorization.split(" ")[1];
       jwt.verify(token, process.env.JWT_SECRET_TOKEN, (err, decoded) => {
         if (err) {
-          return res.staus(401).send({ message: "forbidden access" });
+          return res.status(401).send({ message: "forbidden access" });
         }
         req.decoded = decoded;
         next();
@@ -84,6 +84,12 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    app.get("/users/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await userCollection.findOne({ email });
       res.send(result);
     });
 
