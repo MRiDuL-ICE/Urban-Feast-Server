@@ -36,6 +36,15 @@ async function run() {
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
 
+    // jwt related api
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.JWT_SECRET_TOKEN, {
+        expiresIn: "1h",
+      });
+      res.send({ token });
+    });
+
     // users related api
     app.post("/users", async (req, res) => {
       const user = req.body;
