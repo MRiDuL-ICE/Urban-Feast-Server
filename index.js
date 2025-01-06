@@ -72,7 +72,6 @@ async function run() {
         req.decoded = decoded;
         next();
       });
-      // next();
     };
 
     const verifyAdmin = async (req, res, next) => {
@@ -137,6 +136,12 @@ async function run() {
 
     app.get("/reviews", async (req, res) => {
       const result = await reviewsCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/menu", verifyToken, verifyAdmin, async (req, res) => {
+      const menu = req.body;
+      const result = await menuCollection.insertOne(menu);
       res.send(result);
     });
 
