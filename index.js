@@ -134,6 +134,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/menu/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await menuCollection.findOne(filter);
+      res.send(result);
+    });
+
     app.get("/reviews", async (req, res) => {
       const result = await reviewsCollection.find().toArray();
       res.send(result);
