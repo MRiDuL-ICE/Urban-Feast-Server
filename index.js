@@ -1,3 +1,4 @@
+const stripe = require("stripe")(process.env.STRIPE_SK);
 const express = require("express");
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
