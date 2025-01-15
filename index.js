@@ -226,6 +226,15 @@ async function run() {
       res.send({ result, deleteResult });
     });
 
+    app.get("/payments", verifyToken, async (req, res) => {
+      const email = req.query.email;
+      if (req.query.email !== req.decoded.email) {
+        return res.status(403).send({ message: "forbidden access" });
+      }
+      const result = await paymentCollection.find({ email }).toArray();
+      res.send(result);
+    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
