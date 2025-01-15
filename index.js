@@ -1,4 +1,3 @@
-const stripe = require("stripe")(process.env.STRIPE_SK);
 const express = require("express");
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -8,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config();
+const stripe = require("stripe")(process.env.STRIPE_SK);
 
 app.use(
   cors({
