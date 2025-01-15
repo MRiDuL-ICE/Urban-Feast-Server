@@ -34,6 +34,7 @@ async function run() {
     const menuCollection = client.db("UrbanFeastDB").collection("menu");
     const reviewsCollection = client.db("UrbanFeastDB").collection("reviews");
     const cartCollection = client.db("UrbanFeastDB").collection("carts");
+    const paymentCollection = client.db("UrbanFeastDB").collection("payments");
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
 
@@ -201,6 +202,7 @@ async function run() {
     app.post("/create-payment-intent", async (req, res) => {
       const { price } = req.body;
       const amount = parseInt(price * 100);
+      console.log(amount, "amount tk");
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
         currency: "usd",
@@ -210,6 +212,12 @@ async function run() {
       res.send({
         clientSecret: paymentIntent.client_secret,
       });
+    });
+
+    app.post("/payments", async (req, res) => {
+      const payment = req.body;
+      const result = await paymentCollection.insertOne(payment);
+      res.send(result);
     });
 
     console.log(
