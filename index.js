@@ -11,7 +11,14 @@ const stripe = require("stripe")(process.env.STRIPE_SK);
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+      "https://urban-feast.web.app",
+      "https://urban-feast.firebaseapp.com",
+      "https://urbanfeast.netlify.app",
+    ],
   })
 );
 app.use(express.json());
@@ -64,7 +71,7 @@ async function run() {
     const verifyToken = (req, res, next) => {
       console.log("inside the verify token", req.headers.authorization);
       if (!req.headers.authorization) {
-        return res.staus(401).send({ message: "forbidden access" });
+        return res.status(401).send({ message: "forbidden access" });
       }
       const token = req.headers.authorization.split(" ")[1];
       jwt.verify(token, process.env.JWT_SECRET_TOKEN, (err, decoded) => {
