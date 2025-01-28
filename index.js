@@ -280,7 +280,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", async (req, res) => {
-  res.send("Urban Feast Server Running...");
+  res.send("Urban Feast Server Running");
 });
 
 app.listen(port, () => {
