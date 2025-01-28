@@ -71,12 +71,12 @@ async function run() {
     const verifyToken = (req, res, next) => {
       console.log("inside the verify token", req.headers.authorization);
       if (!req.headers.authorization) {
-        return res.status(401).send({ message: "forbidden access" });
+        return res.status(401).send({ message: "unauthorized access" });
       }
       const token = req.headers.authorization.split(" ")[1];
       jwt.verify(token, process.env.JWT_SECRET_TOKEN, (err, decoded) => {
         if (err) {
-          return res.status(401).send({ message: "forbidden access" });
+          return res.status(401).send({ message: "unauthorized access" });
         }
         req.decoded = decoded;
         next();
@@ -85,11 +85,12 @@ async function run() {
 
     const verifyAdmin = async (req, res, next) => {
       const email = req.decoded.email;
+      console.log("inside verify admin", email);
       const query = { email: email };
       const user = await userCollection.findOne(query);
       const isAdmin = user?.role === "admin";
       if (!isAdmin) {
-        return res.status(403).send({ message: "Unauthorized access" });
+        return res.status(403).send({ message: "forbidden access" });
       }
       next();
     };
@@ -267,6 +268,36 @@ async function run() {
         menuItems,
         orders,
       });
+    });
+
+    // use of aggregate pipeline
+    app.get("/order-stats", async (req, res) => {
+      const result = await paymentCollection
+        .aggregate([
+          {
+            $unwind: "$menuItemIds",
+          },
+          {
+            $lookup: {
+              from: "menu",
+              localField: "menuItemIds",
+              foreignField: "_id",
+              as: "menuItems",
+            },
+          },
+          {
+            $unwind: "$menuItems",
+          },
+          {
+            $group: {
+              _id: "$menuItems.category",
+              quantity: { $sum: 1 },
+              revenue: { $sum: "$menuItems.price" },
+            },
+          },
+        ])
+        .toArray();
+      res.send(result);
     });
 
     console.log(
