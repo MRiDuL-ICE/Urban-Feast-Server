@@ -248,10 +248,6 @@ async function run() {
       const menuItems = await menuCollection.estimatedDocumentCount();
       const orders = await paymentCollection.estimatedDocumentCount();
 
-      // this is not the best way
-      // const payments = await paymentCollection.find().toArray();
-      // const revenue = payments.reduce((sum, payment) => sum + payment.price, 0);
-
       const result = await paymentCollection
         .aggregate([
           {
