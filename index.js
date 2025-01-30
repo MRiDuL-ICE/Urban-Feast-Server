@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config();
-const stripe = require("stripe")(process.env.STRIPE_SK);
 
 app.use(
   cors({
@@ -231,6 +230,9 @@ async function run() {
         },
       };
       const deleteResult = await cartCollection.deleteMany(query);
+
+      // send user email about payment
+
       res.send({ result, deleteResult });
     });
 
